@@ -173,7 +173,12 @@
             <t t-set="sum_volumes" t-value="sum(line.line_packing_volumes for line in doc.order_line)"/>
             <t t-set="sum_weight" t-value="sum(line.line_packing_weight for line in doc.order_line)"/>
             <t t-set="sum_cubicagem" t-value="sum(line.line_packing_cubicagem for line in doc.order_line)"/>
-            <table class="table table-borderless table-sm mt-2">
+            <table class="table table-sm table-bordered small rounded w-auto mx-auto mt-2">
+                <thead class="table-light">
+                    <tr>
+                        <th colspan="2" class="text-center">Summary</th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
                         <th>Total Volumes</th>

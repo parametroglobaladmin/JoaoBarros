@@ -170,6 +170,35 @@
                     <span t-field="doc.fiscal_position_id.sudo().note">No further requirements for this payment</span>
                 </p>
             </div>
+            <t t-set="sum_volumes" t-value="sum(line.line_packing_volumes for line in doc.order_line)"/>
+            <t t-set="sum_weight" t-value="sum(line.line_packing_weight for line in doc.order_line)"/>
+            <t t-set="sum_cubicagem" t-value="sum(line.line_packing_cubicagem for line in doc.order_line)"/>
+            <table class="table table-borderless table-sm mt-2">
+                <tbody>
+                    <tr>
+                        <th>Total Volumes</th>
+                        <td class="text-end"><span t-out="sum_volumes"/></td>
+                    </tr>
+                    <tr>
+                        <th>Total Peso (Kg)</th>
+                        <td class="text-end"><span t-out="sum_weight"/></td>
+                    </tr>
+                    <tr>
+                        <th>Total Cubicagem</th>
+                        <td class="text-end"><span t-out="sum_cubicagem"/></td>
+                    </tr>
+                    <tr>
+                        <th>Shipping Address</th>
+                        <td>
+                            <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Imagem Paletes</th>
+                        <td><span t-field="doc.x_studio_imagem_paletes" t-options="{&quot;widget&quot;: &quot;image&quot;}"/></td>
+                    </tr>
+                </tbody>
+            </table>
             <div class="oe_structure"/>
         </div>
     </t>

@@ -185,6 +185,11 @@
                         <td class="text-end"><span t-out="sum_volumes"/></td>
                         <td class="align-top" rowspan="3">
                             <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                            <span t-field="doc.payment_ter_id" class="d-block mt-1"/>
+                            <div class="small">
+                                Production lead time: 8 - 10 weeks after deposit of 40% of the order value<br/>
+                                Prices in Euros, ex-works Porto - Portugal, without taxes.
+                            </div>
                             <span t-field="doc.x_studio_imagem_paletes" t-options="{&quot;widget&quot;: &quot;image&quot;}" class="d-block mt-1" t-att-style="'max-width:150px;'"/>
                         </td>
                     </tr>

@@ -10,6 +10,8 @@ class CubicagemWizard(models.TransientModel):
 
     picking_id = fields.Many2one('stock.picking', string='Entrega')
     move_id = fields.Many2one('stock.move', string='Linha do Produto')
+    sale_order_id = fields.Many2one('sale.order', string='Ordem de Venda')
+    sale_line_id = fields.Many2one('sale.order.line', string='Linha da Venda')
 
     volumes = fields.Float(string='Volumes', digits=(4, 2), default=0.0)
 
@@ -88,7 +90,7 @@ class CubicagemWizard(models.TransientModel):
 
     def action_calcular(self):
         self.ensure_one()
-        if not self.move_id:
+        if not (self.move_id or self.sale_line_id):
             raise ValidationError("Linha do produto não encontrada.")
 
         # Validações adicionais
@@ -106,12 +108,21 @@ class CubicagemWizard(models.TransientModel):
             self.peso_estimado = peso_estimado
             peso_final = peso_estimado
 
-        # Atualizar a linha do produto
-        self.move_id.write({
-            'move_packing_volumes': self.volumes,
-            'move_packing_cubicagem': self.cubicagem_total,
-            'move_packing_weight': peso_final
-        })
+        # Atualizar a linha do stock.move se existir
+        if self.move_id:
+            self.move_id.write({
+                'move_packing_volumes': self.volumes,
+                'move_packing_cubicagem': self.cubicagem_total,
+                'move_packing_weight': peso_final
+            })
+
+        # Atualizar a linha do sale.order se existir
+        if self.sale_line_id:
+            self.sale_line_id.write({
+                'line_packing_volumes': self.volumes,
+                'line_packing_cubicagem': self.cubicagem_total,
+                'line_packing_weight': peso_final
+            })
 
         return {'type': 'ir.actions.act_window_close'}  # <== FECHA imediatamente o wizard
 
@@ -131,5 +142,16 @@ class CubicagemWizard(models.TransientModel):
                 'cubicagem_total': move.move_packing_cubicagem,
                 'peso_manual': False,  # Por defeito, peso manual desativado
                 'peso_manual_valor': move.move_packing_weight,  # Valor atual como referência
+            })
+        sale_line_id = self.env.context.get('default_sale_line_id')
+        if sale_line_id:
+            line = self.env['sale.order.line'].browse(sale_line_id)
+            res.update({
+                'sale_line_id': line.id,
+                'volumes': line.line_packing_volumes,
+                'peso_estimado': line.line_packing_weight,
+                'cubicagem_total': line.line_packing_cubicagem,
+                'peso_manual': False,
+                'peso_manual_valor': line.line_packing_weight,
             })
         return res

@@ -170,6 +170,35 @@
                     <span t-field="doc.fiscal_position_id.sudo().note">No further requirements for this payment</span>
                 </p>
             </div>
+            <t t-set="sum_volumes" t-value="sum(line.line_packing_volumes for line in doc.order_line)"/>
+            <t t-set="sum_weight" t-value="sum(line.line_packing_weight for line in doc.order_line)"/>
+            <t t-set="sum_cubicagem" t-value="sum(line.line_packing_cubicagem for line in doc.order_line)"/>
+            <table class="table table-sm table-bordered small rounded w-100 mt-2">
+                <thead class="table-light">
+                    <tr>
+                        <th colspan="3" class="text-center" style="font-weight:bold">Summary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th style="font-weight:bold">Total Volumes</th>
+                        <td class="text-start"><span t-out="sum_volumes"/></td>
+                        <td class="align-top" rowspan="3">
+                        <span style="font-weight:bold">Shipping Address:</span>
+                            <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                            <span t-field="doc.x_studio_imagem_paletes" t-options="{&quot;widget&quot;: &quot;image&quot;}" class="d-block mt-1" t-att-style="'max-width:150px;'"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="font-weight:bold">Total Weight (Kg)</th>
+                        <td class="text-start"><span t-out="sum_weight"/></td>
+                    </tr>
+                    <tr>
+                        <th style="font-weight:bold">Total Cubic</th>
+                        <td class="text-start"><span t-out="sum_cubicagem"/></td>
+                    </tr>
+                </tbody>
+            </table>
             <div class="oe_structure"/>
         </div>
     </t>

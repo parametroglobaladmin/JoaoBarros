@@ -24,10 +24,11 @@
     """,
     'author': 'Parâmetro Global',
     'website': 'https://parametro.global',
-    'depends': ['base', 'product', 'stock'],
+    'depends': ['base', 'product', 'stock', 'sale'],
     'data': [
         'views/product_template_views.xml',
         'views/stock_picking_views.xml',
+        'views/sale_order_views.xml',
         'wizard/cubicagem_wizard_views.xml',
         'security/ir.model.access.csv',
     ],

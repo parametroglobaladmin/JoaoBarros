@@ -198,6 +198,16 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="row small">
+                <div class="col-6">
+                    Swift code BCOMPTPL: IBAN PT50 0033 0000 00273554648 05<br/>
+                    Swift code TOTAPTPL: IBAN PT50 0018 2168 02404506020 13
+                </div>
+                <div class="col-6 text-end">
+                    Advanced payment by bank transfer.<br/>
+                    Please refer to our General Conditions of Sales.
+                </div>
+            </div>
             <div class="oe_structure"/>
         </div>
     </t>

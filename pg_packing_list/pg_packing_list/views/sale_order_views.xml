@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sale_order_form_packing_columns" model="ir.ui.view">
+            <field name="name">sale.order.form.packing.columns</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom']" position="after">
+                    <field name="line_packing_volumes" string="Volumes" readonly="1" optional="show" options="{'digits': [4, 2]}"/>
+                    <field name="line_packing_weight" string="Peso (Kg)" readonly="1" optional="show" options="{'digits': [4, 2]}"/>
+                    <field name="line_packing_cubicagem" string="Cubicagem" readonly="1" optional="show" options="{'digits': [4, 2]}"/>
+                    <button name="action_open_line_calc_wizard"
+                            string="🧮"
+                            type="object"
+                            class="btn-link"
+                            context="{'default_sale_line_id': id}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

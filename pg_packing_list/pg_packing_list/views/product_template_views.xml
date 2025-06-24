@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- View form para adicionar aba Packing List ao produto -->
+        <record id="product_template_form_packing_list" model="ir.ui.view">
+            <field name="name">product.template.form.packing.list</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Packing List" name="packing_list">
+                        <group>
+                            <group string="Informações Gerais">
+                                <field name="packing_volumes" options="{'digits':[4,2]}"/>
+                                <field name="packing_weight" options="{'digits':[4,2]}"/>
+                                <field name="packing_cubicagem" options="{'digits':[4,2]}"/>
+                            </group>
+                            
+                            <group string="Dimensões Volume 1">
+                                <field name="packing_comprimento" options="{'digits':[4,2]}"/>
+                                <field name="packing_altura" options="{'digits':[4,2]}"/>
+                                <field name="packing_largura" options="{'digits':[4,2]}"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Dimensões Volume 2 -->
+                        <group string="Dimensões Volume 2" invisible="packing_volumes &lt;= 1.49">
+                            <group>
+                                <field name="packing_comprimento_2" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 1.49"/>
+                                <field name="packing_altura_2" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 1.49"/>
+                                <field name="packing_largura_2" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 1.49"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Dimensões Volume 3 -->
+                        <group string="Dimensões Volume 3" invisible="packing_volumes &lt;= 2.49">
+                            <group>
+                                <field name="packing_comprimento_3" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 2.49"/>
+                                <field name="packing_altura_3" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 2.49"/>
+                                <field name="packing_largura_3" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 2.49"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Dimensões Volume 4 -->
+                        <group string="Dimensões Volume 4" invisible="packing_volumes &lt;= 3.49">
+                            <group>
+                                <field name="packing_comprimento_4" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 3.49"/>
+                                <field name="packing_altura_4" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 3.49"/>
+                                <field name="packing_largura_4" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 3.49"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Dimensões Volume 5 -->
+                        <group string="Dimensões Volume 5" invisible="packing_volumes &lt;= 4.49">
+                            <group>
+                                <field name="packing_comprimento_5" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 4.49"/>
+                                <field name="packing_altura_5" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 4.49"/>
+                                <field name="packing_largura_5" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 4.49"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Dimensões Volume 6 -->
+                        <group string="Dimensões Volume 6" invisible="packing_volumes &lt;= 5.49">
+                            <group>
+                                <field name="packing_comprimento_6" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 5.49"/>
+                                <field name="packing_altura_6" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 5.49"/>
+                                <field name="packing_largura_6" options="{'digits':[4,2]}" invisible="packing_volumes &lt;= 5.49"/>
+                            </group>
+                        </group>                        
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- View tree para mostrar campos de packing list na lista de produtos -->
+        <record id="product_template_tree_packing_list" model="ir.ui.view">
+            <field name="name">product.template.tree.packing.list</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='list_price']" position="after">
+                    <field name="packing_volumes" optional="hide"/>
+                    <field name="packing_weight" optional="hide"/>
+                    <field name="packing_cubicagem" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- View search para permitir filtrar por campos de packing list -->
+        <record id="product_template_search_packing_list" model="ir.ui.view">
+            <field name="name">product.template.search.packing.list</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='filter_to_sell']" position="after">
+                    <separator/>
+                    <filter string="Com Packing List" name="filter_with_packing" 
+                            domain="[('packing_volumes', '>', 0)]"/>
+                    <filter string="Sem Packing List" name="filter_without_packing" 
+                            domain="[('packing_volumes', '=', 0)]"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="packing_volumes"/>
+                    <field name="packing_weight"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

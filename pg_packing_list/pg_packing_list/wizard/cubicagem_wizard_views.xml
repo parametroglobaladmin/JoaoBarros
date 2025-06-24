@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- View form para o Wizard de Cubicagem -->
+        <record id="cubicagem_wizard_form_view" model="ir.ui.view">
+            <field name="name">cubicagem.wizard.form</field>
+            <field name="model">cubicagem.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Cubicagem Wizard">
+                    <sheet>
+                        <group>
+                            <field name="picking_id" invisible="1"/>
+                            <field name="volumes" options="{'digits':[4,2]}"/>
+                        </group>
+                        
+                        <separator string="DIMENSÕES"/>
+                        
+                        <group col="4">
+                            <!-- Coluna Esquerda - Volumes 1, 2, 3 -->
+                            <group string="">
+                                <!-- Volume 1 -->
+                                <field name="comprimento_1" string="Comprimento 1" options="{'digits':[4,2]}"/>
+                                <field name="altura_1" string="Altura 1" options="{'digits':[4,2]}"/>
+                                <field name="largura_1" string="Largura 1" options="{'digits':[4,2]}"/>
+                                
+                                <!-- Volume 2 -->
+                                <field name="comprimento_2" string="Comprimento 2" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 2"/>
+                                <field name="altura_2" string="Altura 2" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 2"/>
+                                <field name="largura_2" string="Largura 2" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 2"/>
+                                
+                                <!-- Volume 3 -->
+                                <field name="comprimento_3" string="Comprimento 3" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 3"/>
+                                <field name="altura_3" string="Altura 3" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 3"/>
+                                <field name="largura_3" string="Largura 3" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 3"/>
+                            </group>
+                            
+                            <!-- Coluna Direita - Volumes 4, 5, 6 -->
+                            <group string="">
+                                <!-- Volume 4 -->
+                                <field name="comprimento_4" string="Comprimento 4" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 4"/>
+                                <field name="altura_4" string="Altura 4" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 4"/>
+                                <field name="largura_4" string="Largura 4" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 4"/>
+                                
+                                <!-- Volume 5 -->
+                                <field name="comprimento_5" string="Comprimento 5" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 5"/>
+                                <field name="altura_5" string="Altura 5" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 5"/>
+                                <field name="largura_5" string="Largura 5" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 5"/>
+                                
+                                <!-- Volume 6 -->
+                                <field name="comprimento_6" string="Comprimento 6" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 6"/>
+                                <field name="altura_6" string="Altura 6" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 6"/>
+                                <field name="largura_6" string="Largura 6" options="{'digits':[4,2]}" 
+                                       invisible="volumes &lt; 6"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <field name="cubicagem_total" string="Cubicagem Total" readonly="1" 
+                                   options="{'digits':[4,2]}"/>
+                        </group>
+                        
+                        <!-- Seção de Peso -->
+                        <separator string="PESO"/>
+                        <group col="2">
+                            <field name="peso_manual" string="Peso Manual"/>
+                            <field name="peso_manual_valor" string="Peso Manual (Kg)" 
+                                   options="{'digits':[4,2]}" 
+                                   invisible="not peso_manual"
+                                   help="Introduza o peso manualmente"/>
+                            <field name="peso_estimado" string="Peso Estimado (Kg)" 
+                                   readonly="1" options="{'digits':[4,2]}"
+                                   invisible="peso_manual"
+                                   help="Peso calculado automaticamente baseado na cubicagem"/>
+                        </group>
+                    </sheet>
+                    
+                    <footer>
+                        <button name="action_calcular" string="Calcular" type="object" 
+                                class="btn-primary" data-hotkey="q"/>
+                        <button name="action_cancelar" string="Cancelar" type="object" 
+                                class="btn-secondary" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Ação para abrir o wizard -->
+        <record id="action_cubicagem_wizard" model="ir.actions.act_window">
+            <field name="name">Cubicagem Wizard</field>
+            <field name="res_model">cubicagem.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="cubicagem_wizard_form_view"/>
+        </record>
+    </data>
+</odoo>
+

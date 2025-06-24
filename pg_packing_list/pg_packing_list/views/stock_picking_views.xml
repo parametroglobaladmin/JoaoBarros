@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Herda a view do formulário de stock.picking -->
+        <record id="stock_picking_form_packing_columns" model="ir.ui.view">
+            <field name="name">stock.picking.form.packing.columns</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Adiciona colunas à tree de movimentos sem pacote -->
+                <xpath expr="//field[@name='product_uom']" position="after">
+                    <field name="move_packing_volumes" string="Volumes" readonly="1" optional="show" options="{'digits': [4, 2]}"/>
+                    <field name="move_packing_weight" string="Peso (Kg)" readonly="1" optional="show" options="{'digits': [4, 2]}"/>
+                    <field name="move_packing_cubicagem" string="Cubicagem" readonly="1" optional="show" options="{'digits': [4, 2]}"/>
+                    <button name="action_open_move_calc_wizard"
+                            string="🧮"
+                            type="object"
+                            class="btn-link"
+                            context="{'default_move_id': id}"
+                            attrs="{'invisible': [('state', '=', 'done')]}"
+                            help="Abrir calculadora para esta linha"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Opcional: botão também no formulário individual de stock.move -->
+        <record id="view_move_form_packing_wizard_button" model="ir.ui.view">
+            <field name="name">stock.move.form.packing.button</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom_qty']" position="after">
+                    <field name="move_packing_weight" readonly="1"/>
+                    <field name="move_packing_cubicagem" readonly="1"/>
+                    <button name="action_open_move_calc_wizard"
+                            string="📦 Calcular"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-calculator"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

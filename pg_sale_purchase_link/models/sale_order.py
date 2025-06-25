@@ -16,14 +16,19 @@ class SaleOrder(models.Model):
         compute="_compute_mrp_production_count",
     )
 
-    @api.depends('name')
+    @api.depends('procurement_group_id')
     def _compute_purchase_order_count(self):
+        """Count purchase orders linked by procurement group."""
         for order in self:
-            if order.name:
-                domain = [('origin', 'ilike', order.name)]
+            group = order.procurement_group_id
+            if group:
+                domain = [('group_id', '=', group.id)]
                 count = self.env['purchase.order'].search_count(domain)
-                _logger.info(
-                    "[DEBUG] Found %s POs for sale order %s", count, order.name
+                _logger.debug(
+                    "Found %s purchase orders for SO %s via group %s",
+                    count,
+                    order.name,
+                    group.id,
                 )
                 order.purchase_order_count = count
             else:
@@ -36,19 +41,23 @@ class SaleOrder(models.Model):
             'name': 'Purchase Orders',
             'res_model': 'purchase.order',
             'view_mode': 'list,form',
-            'domain': [('origin', 'ilike', self.name)],
+            'domain': [('group_id', '=', self.procurement_group_id.id)],
             'context': {'create': False},
         }
 
-    @api.depends('name')
+    @api.depends('procurement_group_id')
     def _compute_mrp_production_count(self):
+        """Count manufacturing orders linked by procurement group."""
         for order in self:
-            if order.name:
-                mo_count = self.env['mrp.production'].search_count([
-                    ('origin', 'ilike', order.name)
-                ])
-                _logger.info(
-                    "[DEBUG] Found %s MOs for sale order %s", mo_count, order.name
+            group = order.procurement_group_id
+            if group:
+                domain = [('procurement_group_id', '=', group.id)]
+                mo_count = self.env['mrp.production'].search_count(domain)
+                _logger.debug(
+                    "Found %s manufacturing orders for SO %s via group %s",
+                    mo_count,
+                    order.name,
+                    group.id,
                 )
                 order.mrp_production_count = mo_count
             else:
@@ -61,7 +70,7 @@ class SaleOrder(models.Model):
             'name': 'Manufacturing Orders',
             'res_model': 'mrp.production',
             'view_mode': 'list,form',
-            'domain': [('origin', 'ilike', self.name)],
+            'domain': [('procurement_group_id', '=', self.procurement_group_id.id)],
             'context': {'create': False},
         }
 

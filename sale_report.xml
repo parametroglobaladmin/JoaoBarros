@@ -46,7 +46,7 @@
             <div class="oe_structure"/>
 
             <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
-            <t t-set="layout_document_title">
+            <t t-set="doc_name">
                 <span t-if="is_proforma">Pro-Forma Invoice # </span>
                 <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
                 <span t-else="">Order # </span>

@@ -1,8 +1,25 @@
 import logging
 import odoo
+from psycopg2 import sql
 from odoo import models, fields, api, _
 
 _logger = logging.getLogger(__name__)
+
+
+def _ensure_column(env, table, column, column_def):
+    """Ensure a column exists in the given table."""
+    env.cr.execute(
+        """SELECT 1 FROM information_schema.columns
+            WHERE table_name=%s AND column_name=%s""",
+        (table, column),
+    )
+    if not env.cr.fetchone():
+        _logger.warning("Column %s.%s missing. Creating it.", table, column)
+        env.cr.execute(
+            sql.SQL("ALTER TABLE {} ADD COLUMN {} {}")
+            .format(sql.Identifier(table), sql.Identifier(column), sql.SQL(column_def))
+        )
+        env.cr.commit()
 
 class AccountMove(models.Model):
     _inherit = "account.move"
@@ -78,6 +95,9 @@ class AccountMove(models.Model):
                     "company_ids": [(6, 0, companies)],
                     "company_id": companies[0],
                 })
+
+                # Ensure required columns exist
+                _ensure_column(second_env, "account_move", "delivery_count", "INTEGER DEFAULT 0")
 
                 # ---- 1. Ensure Customer Exists ----
                 customer = second_env["res.partner"].sudo().search([("name", "=", self.partner_id.name)], limit=1)

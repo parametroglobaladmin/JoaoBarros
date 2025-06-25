@@ -52,6 +52,7 @@
                 <span t-else="">Order # </span>
                 <span t-field="doc.name">SO0000</span>
             </t>
+            <t t-set="doc_name" t-value="layout_document_title"/>
 
             <div class="row mb-4" id="informations">
                 <div t-if="doc.client_order_ref" class="col" name="informations_reference">

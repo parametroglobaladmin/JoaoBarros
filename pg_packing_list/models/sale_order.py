@@ -75,6 +75,25 @@ class SaleOrderLine(models.Model):
         help='Cubicagem para esta linha baseado no produto e quantidade'
     )
 
+    def _sync_move_packing(self):
+        """Sincroniza valores de packing com as linhas de stock vinculadas"""
+        moves = self.env['stock.move'].search([('sale_line_id', 'in', self.ids)])
+        for line in self:
+            related_moves = moves.filtered(lambda m: m.sale_line_id == line)
+            if related_moves:
+                related_moves.write({
+                    'move_packing_volumes': line.line_packing_volumes,
+                    'move_packing_weight': line.line_packing_weight,
+                    'move_packing_cubicagem': line.line_packing_cubicagem,
+                })
+
+    def write(self, vals):
+        res = super().write(vals)
+        packing_fields = {'line_packing_volumes', 'line_packing_weight', 'line_packing_cubicagem'}
+        if packing_fields.intersection(vals.keys()):
+            self._sync_move_packing()
+        return res
+
     @api.depends('product_id.packing_volumes',
                  'product_id.packing_weight',
                  'product_id.packing_cubicagem',
@@ -90,6 +109,7 @@ class SaleOrderLine(models.Model):
                 line.line_packing_volumes = 0.0
                 line.line_packing_weight = 0.0
                 line.line_packing_cubicagem = 0.0
+            line._sync_move_packing()
 
     def action_open_line_calc_wizard(self):
         self.ensure_one()

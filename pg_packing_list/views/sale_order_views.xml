@@ -6,7 +6,7 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='order_line']//list//field[@name='product_uom'][@string='UoM']" position="after">
+                <xpath expr="//field[@name='order_line']//list//field[@name='product_uom']" position="after">
                     <field name="line_packing_volumes" string="Volumes" readonly="1" optional="show" options="{'digits': [4, 2]}"/>
                     <field name="line_packing_weight" string="Peso (Kg)" readonly="1" optional="show" options="{'digits': [4, 2]}"/>
                     <field name="line_packing_cubicagem" string="Cubicagem" readonly="1" optional="show" options="{'digits': [4, 2]}"/>

@@ -8,24 +8,23 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     purchase_order_count = fields.Integer(
-        string='Purchase Order Count',
-        compute='_compute_purchase_order_count',
-        store=True
+        string="Purchase Order Count",
+        compute="_compute_purchase_order_count",
     )
 
     mrp_production_count = fields.Integer(
         compute="_compute_mrp_production_count",
-        store=True
     )
 
-    @api.depends('state')  # safer: recompute after confirmation, when name is final
+    @api.depends('name')
     def _compute_purchase_order_count(self):
         for order in self:
             if order.name:
-                count = self.env['purchase.order'].search_count([
-                    ('origin', '=', order.name)
-                ])
-                _logger.info("[DEBUG] Found %s POs for sale order %s", count, order.name)
+                domain = [('origin', 'ilike', order.name)]
+                count = self.env['purchase.order'].search_count(domain)
+                _logger.info(
+                    "[DEBUG] Found %s POs for sale order %s", count, order.name
+                )
                 order.purchase_order_count = count
             else:
                 order.purchase_order_count = 0
@@ -37,18 +36,20 @@ class SaleOrder(models.Model):
             'name': 'Purchase Orders',
             'res_model': 'purchase.order',
             'view_mode': 'list,form',
-            'domain': [('origin', '=', self.name)],
+            'domain': [('origin', 'ilike', self.name)],
             'context': {'create': False},
         }
 
-    @api.depends('state')  # triggers after confirmation
+    @api.depends('name')
     def _compute_mrp_production_count(self):
         for order in self:
             if order.name:
                 mo_count = self.env['mrp.production'].search_count([
                     ('origin', 'ilike', order.name)
                 ])
-                _logger.info("[DEBUG] Found %s MOs for sale order %s", mo_count, order.name)
+                _logger.info(
+                    "[DEBUG] Found %s MOs for sale order %s", mo_count, order.name
+                )
                 order.mrp_production_count = mo_count
             else:
                 order.mrp_production_count = 0
@@ -63,4 +64,18 @@ class SaleOrder(models.Model):
             'domain': [('origin', 'ilike', self.name)],
             'context': {'create': False},
         }
+
+    def action_confirm(self):
+        old_names = {order.id: order.name for order in self}
+        res = super().action_confirm()
+        for order in self:
+            old_name = old_names.get(order.id)
+            new_name = order.name
+            if old_name and new_name and old_name != new_name:
+                purchases = self.env['purchase.order'].search([
+                    ('origin', '=', old_name)
+                ])
+                if purchases:
+                    purchases.write({'origin': new_name})
+        return res
 

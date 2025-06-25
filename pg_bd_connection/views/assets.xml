@@ -1,0 +1,8 @@
+<odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend" name="Custom Ledger Header Styling">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/pg_bd_connection/static/src/scss/account_reports.scss"/>
+        </xpath>
+    </template>
+</odoo>
+

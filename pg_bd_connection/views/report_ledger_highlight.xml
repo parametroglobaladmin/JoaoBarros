@@ -1,0 +1,10 @@
+<odoo>
+    <template id="pdf_export_main_table_body_inherit" inherit_id="account_reports.pdf_export_main_table_body">
+        <xpath expr="//tr[@name='pdf_export_main_table_body_lines_tr']" position="attributes">
+            <attribute name="t-att-class">
+                o_line_level + o_bold + o_overflow + (' partner-header-pdf' if 'partner-header-pdf' in line.get('class', '') else '')
+            </attribute>
+        </xpath>
+    </template>
+</odoo>
+

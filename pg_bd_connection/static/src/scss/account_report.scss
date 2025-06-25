@@ -1,0 +1,16 @@
+/* Highlight full row of partner headers */
+.account_report tbody tr td.line_name.unfoldable {
+    background-color: #e6f0ff !important;
+    font-weight: bold !important;
+}
+
+/* Optionally apply the color across the entire row */
+.account_report tbody tr td.line_name.unfoldable ~ td {
+    background-color: #e6f0ff !important;
+}
+
+.partner-header-pdf {
+    background-color: #fef3c7 !important;
+}
+
+

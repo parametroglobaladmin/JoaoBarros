@@ -86,5 +86,13 @@ class SaleOrder(models.Model):
                 ])
                 if purchases:
                     purchases.write({'origin': new_name})
+                mos = self.env['mrp.production'].search([
+                    ('origin', '=', old_name)
+                ])
+                if mos:
+                    mos.write({
+                        'origin': new_name,
+                        'procurement_group_id': order.procurement_group_id.id,
+                    })
         return res
 

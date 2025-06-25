@@ -105,7 +105,7 @@
 
                         <tr t-att-class="'fw-bold o_line_section' if (                                 line.display_type == 'line_section'                                 or line.product_type == 'combo'                             )                             else 'fst-italic o_line_note' if line.display_type == 'line_note'                             else ''">
                             <t t-if="not line.display_type and line.product_type != 'combo'"><td name="td_name">
-    <span t-out="' '.join(''.join(part if idx == 0 else part.split(')',1)[-1] for idx, part in enumerate(line.name.split('('))).replace(':', ' ').split())"/>
+    <span t-out="''.join(part if idx == 0 else part.split(')',1)[-1] for idx, part in enumerate(line.name.split('('))).replace(':', ' ')" style="white-space: pre-line"/>
 </td>
                                 <td name="td_quantity" class="text-end text-nowrap"><span t-field="line.product_uom_qty">3</span> <span t-field="line.product_uom">units</span>
                                     <span t-if="line.product_packaging_id">

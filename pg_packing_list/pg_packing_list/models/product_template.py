@@ -25,8 +25,9 @@ class ProductTemplate(models.Model):
     packing_cubicagem = fields.Float(
         string='Cubicagem',
         digits=(4, 2),
-        default=0.0,
-        help='Cubicagem total em m³ (informada manualmente)'
+        compute='_compute_packing_cubicagem',
+        store=True,
+        help='Cubicagem total em m³ calculada automaticamente'
     )
 
     # Dimensões do primeiro volume (sempre visível)
@@ -96,3 +97,29 @@ class ProductTemplate(models.Model):
                     raise ValidationError(
                         f"A dimensão '{record._fields[field_name].string}' não pode ser negativa."
                     )
+
+    @api.depends(
+        'packing_volumes',
+        'packing_comprimento', 'packing_altura', 'packing_largura',
+        'packing_comprimento_2', 'packing_altura_2', 'packing_largura_2',
+        'packing_comprimento_3', 'packing_altura_3', 'packing_largura_3',
+        'packing_comprimento_4', 'packing_altura_4', 'packing_largura_4',
+        'packing_comprimento_5', 'packing_altura_5', 'packing_largura_5',
+        'packing_comprimento_6', 'packing_altura_6', 'packing_largura_6')
+    def _compute_packing_cubicagem(self):
+        """Calcula automaticamente a cubicagem baseada nas dimensões informadas"""
+        for product in self:
+            total = 0.0
+            dims = [
+                (product.packing_comprimento, product.packing_altura, product.packing_largura),
+                (product.packing_comprimento_2, product.packing_altura_2, product.packing_largura_2),
+                (product.packing_comprimento_3, product.packing_altura_3, product.packing_largura_3),
+                (product.packing_comprimento_4, product.packing_altura_4, product.packing_largura_4),
+                (product.packing_comprimento_5, product.packing_altura_5, product.packing_largura_5),
+                (product.packing_comprimento_6, product.packing_altura_6, product.packing_largura_6),
+            ]
+            for i in range(int(min(6, product.packing_volumes))):
+                c, a, l = dims[i]
+                total += c * a * l
+            product.packing_cubicagem = total
+

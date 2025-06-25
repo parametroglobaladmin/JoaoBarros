@@ -123,6 +123,14 @@ class CubicagemWizard(models.TransientModel):
                 'line_packing_cubicagem': self.cubicagem_total,
                 'line_packing_weight': peso_final
             })
+            # Também sincronizar os movimentos de stock associados
+            moves = self.env['stock.move'].search([('sale_line_id', '=', self.sale_line_id.id)])
+            if moves:
+                moves.write({
+                    'move_packing_volumes': self.volumes,
+                    'move_packing_cubicagem': self.cubicagem_total,
+                    'move_packing_weight': peso_final
+                })
 
         return {'type': 'ir.actions.act_window_close'}  # <== FECHA imediatamente o wizard
 

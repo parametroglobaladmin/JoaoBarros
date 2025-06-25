@@ -104,7 +104,9 @@
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
                         <tr t-att-class="'fw-bold o_line_section' if (                                 line.display_type == 'line_section'                                 or line.product_type == 'combo'                             )                             else 'fst-italic o_line_note' if line.display_type == 'line_note'                             else ''">
-                            <t t-if="not line.display_type and line.product_type != 'combo'"><td name="td_name"><span t-field="line.name">Bacon Burger</span></td>
+                            <t t-if="not line.display_type and line.product_type != 'combo'"><td name="td_name">
+    <span t-out="line.name.split('(')[0].replace(':', '').strip()"/>
+</td>
                                 <td name="td_quantity" class="text-end text-nowrap"><span t-field="line.product_uom_qty">3</span> <span t-field="line.product_uom">units</span>
                                     <span t-if="line.product_packaging_id">
                                         (<span t-field="line.product_packaging_qty" t-options="{&quot;widget&quot;: &quot;integer&quot;}"/> <span t-field="line.product_packaging_id"/>)
@@ -158,6 +160,10 @@
                                 <t t-set="currency" t-value="doc.currency_id"/>
                             </t>
                         </table>
+                        <div class="row small">
+                    <p><strong>Production lead time: </strong>8 - 10 weeks after deposit of 40% of the order value<br/>
+                    Prices in Euros, ex-works Porto - Portugal, without taxes.</p>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -189,6 +195,8 @@
             <t t-set="sum_volumes" t-value="sum(line.line_packing_volumes for line in doc.order_line)"/>
             <t t-set="sum_weight" t-value="sum(line.line_packing_weight for line in doc.order_line)"/>
             <t t-set="sum_cubicagem" t-value="sum(line.line_packing_cubicagem for line in doc.order_line)"/>
+            <div style="page-break-inside: avoid;">
+            <strong>Payment Conditions: </strong><span t-field="doc.payment_term_id"/>
             <table class="table table-sm table-bordered small rounded w-100 mt-2">
                 <thead class="table-light">
                     <tr>
@@ -199,11 +207,21 @@
                     <tr>
                         <th style="font-weight:bold">Total Volumes</th>
                         <td class="text-start"><span t-out="sum_volumes"/></td>
-                        <td class="align-top" rowspan="3">
-                        <span style="font-weight:bold">Shipping Address:</span>
-                            <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
-                            <span t-field="doc.x_studio_imagem_paletes" t-options="{&quot;widget&quot;: &quot;image&quot;}" class="d-block mt-1" t-att-style="'max-width:150px;'"/>
-                        </td>
+<td class="align-top" rowspan="3">
+    <div class="d-flex gap-2 align-items-start">
+        <!-- Image Block -->
+        <div class="me-2" style="max-width: 150px;">
+            <span t-field="doc.x_studio_imagem_paletes" t-options="{&quot;widget&quot;: &quot;image&quot;}" class="d-block mt-1 w-100"/>
+        </div>
+
+        <!-- Shipping Address Block -->
+        <div class="flex-grow-1">
+            <span style="font-weight:bold">Delivery Address:</span>
+            <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+        </div>
+    </div>
+</td>
+
                     </tr>
                     <tr>
                         <th style="font-weight:bold">Total Weight (Kg)</th>
@@ -217,15 +235,16 @@
             </table>
                         <div class="row small">
                 <div class="col-6">
-                    Swift code BCOMPTPL: IBAN PT50 0033 0000 00273554648 05<br/>
-                    Swift code TOTAPTPL: IBAN PT50 0018 2168 02404506020 13
+                    <p>Swift code BCOMPTPL: IBAN PT50 0033 0000 00273554648 05</p>
+                    <p>Swift code TOTAPTPL: IBAN PT50 0018 2168 02404506020 13</p><br/>
                 </div>
                 <div class="col-6 text-end">
-                    Advanced payment by bank transfer.<br/>
-                    Please refer to our General Conditions of Sales.
+                    <p>Advanced payment by bank transfer.</p>
+                    <p>Please refer to our General Conditions of Sales.</p><br/>
                 </div>
             </div>
             <div class="oe_structure"/>
+        </div>
         </div>
     </t>
 </t>

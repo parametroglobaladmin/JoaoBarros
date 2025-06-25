@@ -46,12 +46,13 @@
             <div class="oe_structure"/>
 
             <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
-            <t t-set="doc_name">
+            <t t-set="layout_document_title">
                 <span t-if="is_proforma">Pro-Forma Invoice # </span>
                 <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
                 <span t-else="">Order # </span>
                 <span t-field="doc.name">SO0000</span>
             </t>
+            <t t-set="doc_name" t-value="layout_document_title"/>
 
             <div class="row mb-4" id="informations">
                 <div t-if="doc.client_order_ref" class="col" name="informations_reference">
